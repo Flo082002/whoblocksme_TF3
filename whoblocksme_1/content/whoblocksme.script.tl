@@ -9,10 +9,8 @@ local mod_entry_point = ug_require "::/gui/main/mod_entry_point.tl" as ModEntryP
 local whoblocksme : any = {}
 
 local CACHE_SECONDS = 1
-local MAX_LOOKAHEAD = 1000 -- safety cap; effectively the whole remaining path
 local MAX_CHAIN = 20 -- search steps; at most MAX_CHAIN - 1 names are shown, a last step is shown as ...
 local ROW_CHARS = 28
-local MAX_VEHICLE_CALLS = 100
 local RESHOW_SECONDS = 1
 
 -- Opening another window "shelves" (hides) unpinned windows. Windows of one chain session are
@@ -55,7 +53,7 @@ local edgeKey = function(pathEdge : any) : string
 	return tostring(id.entity) .. ":" .. tostring(id.index)
 end
 
--- set DEBUG = true to log (on change only) what the search finds per train
+-- set DEBUG = true to log (on change only) one line per search and train
 local DEBUG = false
 local diagLast : {string : string} = {}
 local diag = function(train : Engine.Entity, text : string)
@@ -66,89 +64,131 @@ local diag = function(train : Engine.Entity, text : string)
 	end
 end
 
+-- read a field of engine userdata without throwing ("no member named ...")
+local field = function(o : any, name : string) : any
+	local ok, value = pcall(function() return (o as {string : any})[name] end)
+	return ok and value or nil
+end
+
+-- the tealdef says servedFrom/servedTo, the real MovePath fields are reservedFrom/reservedTo
+local reservedTo = function(mp : Engine.Component.MovePath) : integer
+	local to = field(mp, "reservedTo")
+	return type(to) == "number" and to as integer or mp.occupiedFrontIndex
+end
+
 local isWaiting = function(trainEntity : Engine.Entity) : boolean
 	return api.engine.getComponent(trainEntity, api.type.ComponentType.TRANSPORT_VEHICLE) ~= nil
 		and api.engine.system.landVehicleMoveSystem.isTrainWaitingForFreePath(trainEntity)
 end
 
--- edge key -> train occupying it (all trains, built once per search)
-local buildOccupiedBy = function() : {string : Engine.Entity}
-	local occupiedBy : {string : Engine.Entity} = {}
+-- waypoints do not end a reservation, only real signals do; unreadable type counts as signal
+local isWaypoint = function(signalId : {string : any}) : boolean
+	local ok, signalType = pcall(function() : any
+		local list = api.engine.getComponent(signalId.entity as Engine.Entity, api.type.ComponentType.SIGNAL_LIST) as {string : any}
+		return ((list.signals as {any})[(signalId.index as integer) + 1] as {string : any}).type
+	end)
+	if not ok then
+		return false
+	end
+	-- the base game has two enums with a WAYPOINT member, compare against both
+	local typeEnums = api.type as {string : any}
+	for __, getWaypoint in ipairs({
+		function() : any return (typeEnums.enum as {string : any}).SignalType.WAYPOINT end,
+		function() : any return (typeEnums.Signal as {string : any}).Type.WAYPOINT end,
+	}) do
+		local okEnum, waypoint = pcall(getWaypoint)
+		if okEnum and waypoint ~= nil and signalType == waypoint then
+			return true
+		end
+	end
+	return false
+end
+
+local hasSignal = function(pathEdge : any) : boolean
+	local e = pathEdge as {string : any}
+	local signal = api.engine.system.signalSystem.getSignal(e.edgeId as EdgeId, not (e.dir as boolean)) as {string : any}
+	return signal ~= nil and signal.entity ~= nil and (signal.entity as integer) >= 0 and not isWaypoint(signal)
+end
+
+-- Keys of a path edge: the edge itself and, for switches/crossings (BASE_NODE entities), the node entity,
+-- because trains crossing each other share the node entity, not an edge.
+local nodeEntities : {string : boolean} = {}
+local keysOf = function(pathEdge : any) : {string}
+	local entity = ((pathEdge as {string : any}).edgeId as {string : any}).entity as Engine.Entity
+	local entityKey = tostring(entity)
+	if nodeEntities[entityKey] == nil then
+		nodeEntities[entityKey] = api.engine.getComponent(entity, api.type.ComponentType.BASE_NODE) ~= nil
+	end
+	if nodeEntities[entityKey] then
+		return { edgeKey(pathEdge), "node:" .. entityKey }
+	end
+	return { edgeKey(pathEdge) }
+end
+
+-- key -> trains holding it: every train holds path[occupiedBack .. reservedTo] (built once per search)
+local buildHeldBy = function() : {string : {Engine.Entity}}
+	local heldBy : {string : {Engine.Entity}} = {}
 	for __, train in ipairs(api.engine.getEntitiesWithComponent(api.type.ComponentType.TRANSPORT_VEHICLE)) do
 		if api.engine.getComponent(train, api.type.ComponentType.TRAIN) then
 			local mp = api.engine.getComponent(train, api.type.ComponentType.MOVE_PATH) as Engine.Component.MovePath
 			if mp then
-				for i = mp.occupiedBackIndex, mp.occupiedFrontIndex do
-					local edge = mp.path.edges[i + 1]
-					if edge then
-						occupiedBy[edgeKey(edge)] = train
+				for i = mp.occupiedBackIndex, math.min(reservedTo(mp), #mp.path.edges - 1) do
+					for __, key in ipairs(keysOf(mp.path.edges[i + 1])) do
+						local holders = heldBy[key] or {}
+						if holders[#holders] ~= train then
+							table.insert(holders, train)
+						end
+						heldBy[key] = holders
 					end
 				end
 			end
 		end
 	end
-	return occupiedBy
+	return heldBy
 end
 
--- first other train occupying an edge on the path ahead (indices assumed zero-based)
--- getBlockedTrains() is useless here, it is empty for normal waiting
-local blockerOf = function(train : Engine.Entity, occupiedBy : {string : Engine.Entity}, visited : {string : boolean}) : Engine.Entity
+-- The area a waiting train needs: path[reservedTo+1 .. next signal]. Blocker = the other train holding
+-- a key of that area at the smallest path index. (Indices are zero-based.)
+local blockerOf = function(train : Engine.Entity, heldBy : {string : {Engine.Entity}}) : Engine.Entity
 	local mp = api.engine.getComponent(train, api.type.ComponentType.MOVE_PATH) as Engine.Component.MovePath
 	if not mp then
 		return -1
 	end
-	local first = mp.occupiedFrontIndex + 1
-	local last = math.min(#mp.path.edges - 1, first + MAX_LOOKAHEAD - 1)
+	local first = reservedTo(mp) + 1
+	local last = #mp.path.edges - 1
+	local signalFound = false
 	for i = first, last do
-		local other = occupiedBy[edgeKey(mp.path.edges[i + 1])]
-		if other and other ~= train then
-			diag(train, "back=" .. mp.occupiedBackIndex .. " front=" .. mp.occupiedFrontIndex .. " pathLen=" .. #mp.path.edges .. " scanned=" .. first .. ".." .. last .. " -> occupancy blocker=" .. tostring(other) .. " at " .. i)
-			return other
-		end
-	end
-
-	-- fallback: transportVehicleSystem.getVehicles also reports reserving vehicles
-	-- (per transport network entity, so coarser than the edge map)
-	local seen : {string : boolean} = {}
-	local lines : {string} = {}
-	local calls = 0
-	for i = first, #mp.path.edges - 1 do
-		local tnEntity = (mp.path.edges[i + 1] as {string : any}).edgeId.entity as Engine.Entity
-		local tnKey = tostring(tnEntity)
-		if not seen[tnKey] and calls < MAX_VEHICLE_CALLS then
-			seen[tnKey] = true
-			calls = calls + 1
-			local vehicles = api.engine.system.transportVehicleSystem.getVehicles({ tnEntity }, false)
-			if DEBUG and #lines < 10 then
-				local ids : {string} = {}
-				for __, v in ipairs(vehicles) do
-					table.insert(ids, tostring(v))
-				end
-				table.insert(lines, tnKey .. "={" .. table.concat(ids, ",") .. "}")
-			end
-			for __, v in ipairs(vehicles) do
-				if v ~= train and not visited[tostring(v)] and api.engine.getComponent(v, api.type.ComponentType.TRAIN) then
-					diag(train, "occupancy none; getVehicles -> blocker=" .. tostring(v) .. " at edge " .. i .. " | " .. table.concat(lines, " "))
-					return v
+		local edge = mp.path.edges[i + 1]
+		for __, key in ipairs(keysOf(edge)) do
+			for __, holder in ipairs(heldBy[key] or {}) do
+				if holder ~= train then
+					diag(train, "needs " .. first .. ".." .. i .. " -> blocker=" .. tostring(holder)
+						.. " '" .. api.engine.util.getEntityName(holder) .. "' key=" .. key .. " idx=" .. i)
+					return holder
 				end
 			end
 		end
+		if hasSignal(edge) then
+			signalFound = true
+			last = i
+			break
+		end
 	end
-	diag(train, "back=" .. mp.occupiedBackIndex .. " front=" .. mp.occupiedFrontIndex .. " pathLen=" .. #mp.path.edges .. " scanned=" .. first .. ".." .. last .. " -> none | getVehicles: " .. table.concat(lines, " "))
+	diag(train, "needs " .. first .. ".." .. last .. " (signal " .. (signalFound and "yes" or "no") .. ") -> none")
 	return -1
 end
 
 local unsafeSearchChain = function(ownTrain : Engine.Entity) : Chain
 	local chain : Chain = { blockers = {} }
-	local occupiedBy = buildOccupiedBy()
+	nodeEntities = {}
+	local heldBy = buildHeldBy()
 	local visited : {string : boolean} = { [tostring(ownTrain)] = true }
 	local current = ownTrain
 	while #chain.blockers < MAX_CHAIN do
 		if current ~= ownTrain and not isWaiting(current) then
-			diag(current, "not waiting -> chain stops")
 			break
 		end
-		local blocker = blockerOf(current, occupiedBy, visited)
+		local blocker = blockerOf(current, heldBy)
 		if blocker < 0 then
 			break
 		end
