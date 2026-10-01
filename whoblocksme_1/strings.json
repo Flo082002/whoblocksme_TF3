@@ -1,0 +1,41 @@
+{
+    "en": {
+        "whoblocksme_blocked_by": "Blocked by"
+    },
+    "de": {
+        "whoblocksme_blocked_by": "Blockiert von"
+    },
+    "es": {
+        "whoblocksme_blocked_by": "Bloqueado por"
+    },
+    "fr": {
+        "whoblocksme_blocked_by": "Bloqué par"
+    },
+    "it": {
+        "whoblocksme_blocked_by": "Bloccato da"
+    },
+    "ja": {
+        "whoblocksme_blocked_by": "ブロック元"
+    },
+    "ko": {
+        "whoblocksme_blocked_by": "막고 있는 열차"
+    },
+    "nl": {
+        "whoblocksme_blocked_by": "Geblokkeerd door"
+    },
+    "pl": {
+        "whoblocksme_blocked_by": "Blokuje"
+    },
+    "pt_BR": {
+        "whoblocksme_blocked_by": "Bloqueado por"
+    },
+    "ru": {
+        "whoblocksme_blocked_by": "Блокирует"
+    },
+    "zh_CN": {
+        "whoblocksme_blocked_by": "被阻挡于"
+    },
+    "zh_TW": {
+        "whoblocksme_blocked_by": "被阻擋於"
+    }
+}
