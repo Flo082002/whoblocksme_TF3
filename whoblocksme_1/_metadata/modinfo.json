@@ -9,7 +9,7 @@
             "description": "Shows the blocking trains below the speed badge of a train showing \"Waiting for Free Path\". Buttons list the chain of blockers; a cycle (deadlock) is marked with ↺. Click a button to open that train's window.\n\nLimits: only trains occupying track are detected, reservations without occupation are not. Opened windows may get hidden by the game; pin them to keep them open."
         },
         "de": {
-            "name": "Wer steht mir im Weg?",
+            "name": "Wer ist im Weg?",
             "summary": "Zeigt, welcher Zug einen wartenden Zug blockiert.",
             "description": "Zeigt unter der Geschwindigkeitsanzeige eines Zugs mit „Warte auf freie Wege“ die blockierenden Züge. Buttons zeigen die Blocker-Kette; ein Kreis (Deadlock) ist mit ↺ markiert. Ein Klick öffnet das Fenster dieses Zugs.\n\nGrenzen: Nur Züge, die Gleis belegen, werden erkannt, Reservierungen ohne Belegung nicht. Das Spiel kann geöffnete Fenster ausblenden; zum Behalten Fenster anheften."
         },

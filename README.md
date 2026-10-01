@@ -37,7 +37,7 @@ MIT, see [LICENSE](LICENSE).
 
 ## Deutsch
 
-**Wer steht mir im Weg?** zeigt im Fahrzeugfenster eines Zugs mit „Warte auf freie Wege“ die Kette der blockierenden Züge als anklickbare Namen. Ein Klick öffnet das Fenster des jeweiligen Zugs, ein Kreis (Deadlock) wird mit ↺ markiert, nach 19 Namen folgt „…“.
+**Wer ist im Weg?** zeigt im Fahrzeugfenster eines Zugs mit „Warte auf freie Wege“ die Kette der blockierenden Züge als anklickbare Namen. Ein Klick öffnet das Fenster des jeweiligen Zugs, ein Kreis (Deadlock) wird mit ↺ markiert, nach 19 Namen folgt „…“.
 
 Installation über mod.io bzw. den Mod Hub im Spiel, oder manuell den Ordner `whoblocksme_1` nach `~/.local/share/Transport Fever 3/mods/` (Linux) bzw. in den `mods`-Ordner der Userdata (Windows) kopieren und das Spiel neu starten.
 
