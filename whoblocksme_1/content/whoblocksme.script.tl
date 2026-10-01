@@ -265,7 +265,7 @@ local BlockerSpeedIndicator = react.RegisterRecipe("WhoBlocksMeSpeedIndicator", 
 			end
 		end
 		if chain.cycleTo and api.engine.entityExists(chain.cycleTo) then
-			table.insert(entries, { "↺ ", chain.cycleTo })
+			table.insert(entries, { "∞ ", chain.cycleTo })
 		end
 
 		local row : {TreeNodeId} = {}

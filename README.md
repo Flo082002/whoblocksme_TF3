@@ -2,7 +2,7 @@
 
 A Transport Fever 3 mod that tells you which train is blocking yours.
 
-When a train's vehicle window shows **"Waiting for Free Path"**, the mod adds a row of clickable train names below it: the train blocking yours, the train blocking that one, and so on. Clicking a name opens that train's window. If the chain loops back on itself (a deadlock), it is marked with **↺**. The chain is capped at 19 names, followed by "…".
+When a train's vehicle window shows **"Waiting for Free Path"**, the mod adds a row of clickable train names below it: the train blocking yours, the train blocking that one, and so on. Clicking a name opens that train's window. If the chain loops back on itself (a deadlock), it is marked with **∞**. The chain is capped at 19 names, followed by "…".
 
 ![Screenshot](whoblocksme_1/_metadata/0.png)
 
@@ -37,7 +37,7 @@ MIT, see [LICENSE](LICENSE).
 
 ## Deutsch
 
-**Wer ist im Weg?** zeigt im Fahrzeugfenster eines Zugs mit „Warte auf freie Wege“ die Kette der blockierenden Züge als anklickbare Namen. Ein Klick öffnet das Fenster des jeweiligen Zugs, ein Kreis (Deadlock) wird mit ↺ markiert, nach 19 Namen folgt „…“.
+**Wer ist im Weg?** zeigt im Fahrzeugfenster eines Zugs mit „Warte auf freie Wege“ die Kette der blockierenden Züge als anklickbare Namen. Ein Klick öffnet das Fenster des jeweiligen Zugs, ein Kreis (Deadlock) wird mit ∞ markiert, nach 19 Namen folgt „…“.
 
 Installation über mod.io bzw. den Mod Hub im Spiel, oder manuell den Ordner `whoblocksme_1` nach `~/.local/share/Transport Fever 3/mods/` (Linux) bzw. in den `mods`-Ordner der Userdata (Windows) kopieren und das Spiel neu starten.
 
