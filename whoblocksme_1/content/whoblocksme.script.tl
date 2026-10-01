@@ -147,8 +147,76 @@ local buildHeldBy = function() : {string : {Engine.Entity}}
 	return heldBy
 end
 
--- The area a waiting train needs: path[reservedTo+1 .. next signal]. Blocker = the other train holding
--- a key of that area at the smallest path index. (Indices are zero-based.)
+-- TEMP (DEBUG only): why was no blocker found? logs on change only
+local explainNone = function(train : Engine.Entity, mp : Engine.Component.MovePath, first : integer, last : integer, signals : string)
+	local tv = api.engine.getComponent(train, api.type.ComponentType.TRANSPORT_VEHICLE) as {string : any}
+	local lines : {string} = {}
+	local add = function(text : string)
+		table.insert(lines, text)
+	end
+	add("NONE '" .. api.engine.util.getEntityName(train) .. "' state=" .. tostring(tv and tv.state) .. " line=" .. tostring(tv and tv.line)
+		.. " stopIndex=" .. tostring(tv and tv.stopIndex) .. " back=" .. mp.occupiedBackIndex .. " front=" .. mp.occupiedFrontIndex
+		.. " reserved=" .. tostring(field(mp, "reservedFrom")) .. ".." .. tostring(field(mp, "reservedTo")) .. " edges=" .. #mp.path.edges
+		.. " needs=" .. first .. ".." .. last .. " signals=" .. signals)
+	local parts : {string} = {}
+	for i = first, math.min(last, first + 19) do
+		local edge = mp.path.edges[i + 1]
+		table.insert(parts, i .. ":" .. edgeKey(edge) .. (#keysOf(edge) > 1 and "[NODE]" or ""))
+	end
+	add("needed edges " .. table.concat(parts, " "))
+
+	-- edge entity -> first index on this train's whole path
+	local entityIndex : {string : integer} = {}
+	for i = 0, #mp.path.edges - 1 do
+		local entityKey = tostring(((mp.path.edges[i + 1] as {string : any}).edgeId as {string : any}).entity)
+		if entityIndex[entityKey] == nil then
+			entityIndex[entityKey] = i
+		end
+	end
+	local count = 0
+	for __, other in ipairs(api.engine.getEntitiesWithComponent(api.type.ComponentType.TRANSPORT_VEHICLE)) do
+		if other ~= train and api.engine.getComponent(other, api.type.ComponentType.TRAIN) then
+			local omp = api.engine.getComponent(other, api.type.ComponentType.MOVE_PATH) as Engine.Component.MovePath
+			if omp and count < 10 then
+				local heldTo = math.min(reservedTo(omp), #omp.path.edges - 1)
+				local shared = ""
+				local near = ""
+				for i = omp.occupiedBackIndex, heldTo do
+					local edge = omp.path.edges[i + 1]
+					local entityKey = tostring(((edge as {string : any}).edgeId as {string : any}).entity)
+					local mine = entityIndex[entityKey]
+					if mine ~= nil then
+						if shared == "" then
+							shared = "SHARED entity " .. entityKey .. " its " .. edgeKey(edge) .. "@" .. i .. " / own " .. edgeKey(mp.path.edges[mine + 1]) .. "@" .. mine
+						end
+						if i <= omp.occupiedFrontIndex and near == "" and math.abs(mine - mp.occupiedFrontIndex) <= 3 then
+							near = " NEAR-FRONT(own idx " .. mine .. ")"
+						end
+					end
+				end
+				if shared ~= "" then
+					count = count + 1
+					add("other " .. tostring(other) .. " '" .. api.engine.util.getEntityName(other) .. "' waiting=" .. tostring(isWaiting(other))
+						.. " back=" .. omp.occupiedBackIndex .. " front=" .. omp.occupiedFrontIndex .. " reserved=" .. tostring(field(omp, "reservedFrom"))
+						.. ".." .. tostring(field(omp, "reservedTo")) .. " " .. shared .. near)
+				end
+			end
+		end
+	end
+	if count == 0 then
+		add("no other train holds any edge entity of this train's whole path")
+	end
+	local text = table.concat(lines, "\n    ")
+	local key = "none" .. tostring(train)
+	if diagLast[key] ~= text then
+		diagLast[key] = text
+		log.message("WHOBLOCKSME " .. tostring(train) .. " " .. text)
+	end
+end
+
+-- The area a waiting train needs: path[reservedTo+1 .. second real signal ahead] (a train passes a signal only
+-- if the block behind it is free too), or to the path end. Blocker = the other train holding a key of that
+-- area at the smallest path index. (Indices are zero-based.)
 local blockerOf = function(train : Engine.Entity, heldBy : {string : {Engine.Entity}}) : Engine.Entity
 	local mp = api.engine.getComponent(train, api.type.ComponentType.MOVE_PATH) as Engine.Component.MovePath
 	if not mp then
@@ -156,25 +224,31 @@ local blockerOf = function(train : Engine.Entity, heldBy : {string : {Engine.Ent
 	end
 	local first = reservedTo(mp) + 1
 	local last = #mp.path.edges - 1
-	local signalFound = false
+	local signalIndices : {string} = {}
 	for i = first, last do
 		local edge = mp.path.edges[i + 1]
 		for __, key in ipairs(keysOf(edge)) do
 			for __, holder in ipairs(heldBy[key] or {}) do
 				if holder ~= train then
-					diag(train, "needs " .. first .. ".." .. i .. " -> blocker=" .. tostring(holder)
+					diag(train, "needs " .. first .. ".." .. i .. " signals=" .. table.concat(signalIndices, ",") .. " -> blocker=" .. tostring(holder)
 						.. " '" .. api.engine.util.getEntityName(holder) .. "' key=" .. key .. " idx=" .. i)
 					return holder
 				end
 			end
 		end
 		if hasSignal(edge) then
-			signalFound = true
-			last = i
-			break
+			table.insert(signalIndices, tostring(i))
+			if #signalIndices >= 2 then
+				last = i
+				break
+			end
 		end
 	end
-	diag(train, "needs " .. first .. ".." .. last .. " (signal " .. (signalFound and "yes" or "no") .. ") -> none")
+	local signals = #signalIndices > 0 and table.concat(signalIndices, ",") or "none"
+	diag(train, "needs " .. first .. ".." .. last .. " signals=" .. signals .. " -> none")
+	if DEBUG then
+		explainNone(train, mp, first, last, signals)
+	end
 	return -1
 end
 
