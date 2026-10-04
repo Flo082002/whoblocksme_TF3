@@ -1,72 +1,72 @@
 {
     "name": "Who's in my way? TF3",
     "summary": "Shows which train blocks a waiting train.",
-    "description": "Shows the blocking trains below the speed badge of a train showing \"Waiting for Free Path\". Buttons list the chain of blockers; a cycle (deadlock) is marked with ∞. Click a button to open that train's window.\n\nLimits: Detects trains that occupy or have reserved the track ahead, including switches and crossings. Opened windows may get hidden by the game; pin them to keep them open.\n\nGitHub: https://github.com/Flo082002/whoblocksme_TF3",
+    "description": "When a train shows \"Waiting for Free Path\", the blocking trains are listed below its speed badge as clickable names: the chain of blockers (up to 19, then \"…\"). A deadlock cycle is marked with ∞. Click a name to open that train's window.\n\nDetects trains that occupy or have reserved the track ahead, including switches and crossings. The chain's windows stay visible after a click; pin a window to keep it open for good.\n\nGitHub: https://github.com/Flo082002/whoblocksme_TF3",
     "localization": {
         "en": {
             "name": "Who's in my way?",
             "summary": "Shows which train blocks a waiting train.",
-            "description": "Shows the blocking trains below the speed badge of a train showing \"Waiting for Free Path\". Buttons list the chain of blockers; a cycle (deadlock) is marked with ∞. Click a button to open that train's window.\n\nLimits: Detects trains that occupy or have reserved the track ahead, including switches and crossings. Opened windows may get hidden by the game; pin them to keep them open."
+            "description": "When a train shows \"Waiting for Free Path\", the blocking trains are listed below its speed badge as clickable names: the chain of blockers (up to 19, then \"…\"). A deadlock cycle is marked with ∞. Click a name to open that train's window.\n\nDetects trains that occupy or have reserved the track ahead, including switches and crossings. The chain's windows stay visible after a click; pin a window to keep it open for good."
         },
         "de": {
             "name": "Wer ist im Weg?",
             "summary": "Zeigt, welcher Zug einen wartenden Zug blockiert.",
-            "description": "Zeigt unter der Geschwindigkeitsanzeige eines Zugs mit „Warte auf freie Wege“ die blockierenden Züge. Buttons zeigen die Blocker-Kette; ein Kreis (Deadlock) ist mit ∞ markiert. Ein Klick öffnet das Fenster dieses Zugs.\n\nGrenzen: Erkennt Züge, die das Gleis voraus belegen oder reserviert haben, auch an Weichen und Kreuzungen. Das Spiel kann geöffnete Fenster ausblenden; zum Behalten Fenster anheften."
+            "description": "Zeigt ein Zug „Warte auf freie Wege“, stehen unter seiner Geschwindigkeitsanzeige die blockierenden Züge als anklickbare Namen: die Blocker-Kette (bis 19, dann „…“). Ein Kreis (Deadlock) ist mit ∞ markiert. Ein Klick öffnet das Fenster dieses Zugs.\n\nErkennt Züge, die das Gleis voraus belegen oder reserviert haben, auch an Weichen und Kreuzungen. Die Fenster der Kette bleiben nach dem Klick sichtbar; zum dauerhaften Behalten Fenster anheften."
         },
         "es": {
             "name": "¿Quién me estorba?",
             "summary": "Muestra qué tren bloquea a un tren en espera.",
-            "description": "Muestra los trenes que bloquean bajo el indicador de velocidad de un tren con «Esperando una ruta libre». Los botones muestran la cadena de bloqueos; un ciclo (bloqueo mutuo) se marca con ∞. Pulsa un botón para abrir la ventana de ese tren.\n\nLímites: Detecta trenes que ocupan o han reservado la vía por delante, también en cambios y cruces. El juego puede ocultar las ventanas abiertas; fíjalas para mantenerlas."
+            "description": "Cuando un tren muestra «Esperando una ruta libre», bajo su indicador de velocidad aparecen los trenes que lo bloquean como nombres pulsables: la cadena de bloqueos (hasta 19, luego «…»). Un ciclo (bloqueo mutuo) se marca con ∞. Pulsa un nombre para abrir la ventana de ese tren.\n\nDetecta trenes que ocupan o han reservado la vía por delante, también en cambios y cruces. Las ventanas de la cadena siguen visibles tras pulsar; fija una ventana para mantenerla abierta."
         },
         "fr": {
             "name": "Qui me barre la route ?",
             "summary": "Indique quel train bloque un train en attente.",
-            "description": "Affiche les trains bloquants sous l’indicateur de vitesse d’un train indiquant « En attente d’un trajet libre ». Des boutons montrent la chaîne de blocages ; un cycle (interblocage) est marqué par ∞. Un clic ouvre la fenêtre de ce train.\n\nLimites : Détecte les trains qui occupent ou ont réservé la voie devant, y compris aux aiguillages et croisements. Le jeu peut masquer les fenêtres ouvertes ; épinglez-les pour les garder."
+            "description": "Quand un train indique « En attente d’un trajet libre », les trains bloquants apparaissent sous son indicateur de vitesse sous forme de noms cliquables : la chaîne de blocages (jusqu’à 19, puis « … »). Un cycle (interblocage) est marqué par ∞. Cliquez sur un nom pour ouvrir la fenêtre de ce train.\n\nDétecte les trains qui occupent ou ont réservé la voie devant, y compris aux aiguillages et croisements. Les fenêtres de la chaîne restent visibles après le clic ; épinglez une fenêtre pour la garder ouverte."
         },
         "it": {
             "name": "Chi mi sbarra la strada?",
             "summary": "Mostra quale treno blocca un treno in attesa.",
-            "description": "Mostra i treni bloccanti sotto l’indicatore di velocità di un treno con «In attesa di percorso libero». I pulsanti mostrano la catena dei blocchi; un ciclo (stallo) è indicato da ∞. Un clic apre la finestra di quel treno.\n\nLimiti: Rileva i treni che occupano o hanno prenotato il binario davanti, anche su scambi e incroci. Il gioco può nascondere le finestre aperte; fissale per mantenerle."
+            "description": "Quando un treno mostra «In attesa di percorso libero», sotto il suo indicatore di velocità compaiono i treni bloccanti come nomi cliccabili: la catena dei blocchi (fino a 19, poi «…»). Un ciclo (stallo) è indicato da ∞. Clicca un nome per aprire la finestra di quel treno.\n\nRileva i treni che occupano o hanno prenotato il binario davanti, anche su scambi e incroci. Le finestre della catena restano visibili dopo il clic; fissa una finestra per tenerla aperta."
         },
         "ja": {
             "name": "誰が邪魔？",
             "summary": "待機中の列車を止めている列車を表示します。",
-            "description": "「道が空くのを待機中」と表示された列車の速度表示の下に、止めている列車を表示します。ボタンで妨害の連鎖を表示し、循環（デッドロック）は ∞ で示します。ボタンを押すとその列車のウィンドウが開きます。\n\n制限：前方の線路を占有または予約している列車を、分岐器や交差部も含めて検出します。。開いたウィンドウはゲームに隠されることがあるため、ピン留めしてください。"
+            "description": "列車に「道が空くのを待機中」と表示されているとき、速度表示の下に止めている列車の名前がクリック可能な形で並びます（最大19件、その後は「…」）。循環（デッドロック）は ∞ で示します。名前を押すとその列車のウィンドウが開きます。\n\n前方の線路を占有または予約している列車を、分岐器や交差部も含めて検出します。クリック後も連鎖のウィンドウは表示されたままです。常に開いておくにはピン留めしてください。"
         },
         "ko": {
             "name": "누가 길을 막나?",
             "summary": "대기 중인 열차를 막는 열차를 표시합니다.",
-            "description": "'사용 가능한 길 기다리는 중' 상태인 열차의 속도 표시 아래에 막고 있는 열차를 표시합니다. 버튼으로 막힘 연쇄를 보여 주며, 순환(교착)은 ∞로 표시합니다. 버튼을 누르면 해당 열차 창이 열립니다.\n\n제한: 전방 선로를 점유하거나 예약한 열차를 분기기와 교차부까지 포함해 감지합니다. 열린 창은 게임이 숨길 수 있으니 고정해 두세요."
+            "description": "열차에 '사용 가능한 길 기다리는 중'라고 표시되면 속도 표시 아래에 막고 있는 열차가 클릭 가능한 이름으로 나열됩니다(최대 19개, 이후 \"…\"). 순환(교착)은 ∞로 표시합니다. 이름을 누르면 해당 열차 창이 열립니다.\n\n전방 선로를 점유하거나 예약한 열차를 분기기와 교차부까지 포함해 감지합니다. 클릭 후에도 연쇄의 창은 계속 보이며, 항상 열어 두려면 창을 고정하세요."
         },
         "nl": {
             "name": "Wie staat in de weg?",
             "summary": "Toont welke trein een wachtende trein blokkeert.",
-            "description": "Toont de blokkerende treinen onder de snelheidsindicator van een trein met \"Wacht op beschikbare route\". Knoppen tonen de keten van blokkades; een cyclus (deadlock) is gemarkeerd met ∞. Klik op een knop om het venster van die trein te openen.\n\nBeperkingen: Herkent treinen die het spoor voor zich bezetten of gereserveerd hebben, ook bij wissels en kruisingen. Het spel kan geopende vensters verbergen; maak ze vast om ze te behouden."
+            "description": "Als een trein \"Wacht op beschikbare route\" toont, staan onder de snelheidsindicator de blokkerende treinen als klikbare namen: de keten van blokkades (tot 19, dan \"…\"). Een cyclus (deadlock) is gemarkeerd met ∞. Klik op een naam om het venster van die trein te openen.\n\nHerkent treinen die het spoor voor zich bezetten of gereserveerd hebben, ook bij wissels en kruisingen. De vensters van de keten blijven na het klikken zichtbaar; maak een venster vast om het open te houden."
         },
         "pl": {
             "name": "Kto mi stoi na drodze?",
             "summary": "Pokazuje, który pociąg blokuje czekający pociąg.",
-            "description": "Pokazuje blokujące pociągi pod wskaźnikiem prędkości pociągu z komunikatem „Oczekiwanie na wolny szlak”. Przyciski pokazują łańcuch blokad; cykl (zakleszczenie) oznaczono ∞. Kliknięcie otwiera okno tego pociągu.\n\nOgraniczenia: Wykrywa pociągi zajmujące lub rezerwujące tor przed nami, także na rozjazdach i skrzyżowaniach. Gra może ukrywać otwarte okna; przypnij je, aby zostały."
+            "description": "Gdy pociąg pokazuje „Oczekiwanie na wolny szlak”, pod wskaźnikiem prędkości pojawiają się blokujące pociągi jako klikalne nazwy: łańcuch blokad (do 19, potem „…”). Cykl (zakleszczenie) oznaczono ∞. Kliknij nazwę, aby otworzyć okno tego pociągu.\n\nWykrywa pociągi zajmujące lub rezerwujące tor przed nami, także na rozjazdach i skrzyżowaniach. Okna łańcucha pozostają widoczne po kliknięciu; przypnij okno, aby zostało otwarte."
         },
         "pt_BR": {
             "name": "Quem está no meu caminho?",
             "summary": "Mostra qual trem bloqueia um trem em espera.",
-            "description": "Mostra os trens bloqueadores abaixo do indicador de velocidade de um trem com \"Aguardando caminho livre\". Botões mostram a cadeia de bloqueios; um ciclo (impasse) é marcado com ∞. Clique em um botão para abrir a janela desse trem.\n\nLimites: Detecta trens que ocupam ou reservaram a via à frente, inclusive em aparelhos de mudança e cruzamentos. O jogo pode ocultar janelas abertas; fixe-as para mantê-las."
+            "description": "Quando um trem mostra \"Aguardando caminho livre\", abaixo do indicador de velocidade aparecem os trens bloqueadores como nomes clicáveis: a cadeia de bloqueios (até 19, depois \"…\"). Um ciclo (impasse) é marcado com ∞. Clique em um nome para abrir a janela desse trem.\n\nDetecta trens que ocupam ou reservaram a via à frente, inclusive em aparelhos de mudança e cruzamentos. As janelas da cadeia permanecem visíveis após o clique; fixe uma janela para mantê-la aberta."
         },
         "ru": {
             "name": "Кто мне мешает?",
             "summary": "Показывает, какой поезд блокирует ожидающий поезд.",
-            "description": "Показывает блокирующие поезда под индикатором скорости поезда со статусом «Ждет пока путь освободится». Кнопки показывают цепочку блокировок; цикл (взаимная блокировка) отмечен ∞. Нажатие открывает окно этого поезда.\n\nОграничения: Определяет поезда, которые занимают или зарезервировали путь впереди, включая стрелки и пересечения. Игра может скрывать открытые окна; закрепите их, чтобы они остались."
+            "description": "Когда у поезда показано «Ждет пока путь освободится», под индикатором скорости появляются блокирующие поезда в виде кликабельных имён: цепочка блокировок (до 19, затем «…»). Цикл (взаимная блокировка) отмечен ∞. Нажмите на имя, чтобы открыть окно этого поезда.\n\nОпределяет поезда, которые занимают или зарезервировали путь впереди, включая стрелки и пересечения. Окна цепочки остаются видимыми после клика; закрепите окно, чтобы оно осталось открытым."
         },
         "zh_CN": {
             "name": "谁挡了我的路？",
             "summary": "显示是哪列火车挡住了等待中的火车。",
-            "description": "在显示“等待通路空闲”的火车速度标识下方显示阻挡它的火车。按钮列出阻挡链，循环（死锁）以 ∞ 标记。点击按钮可打开该火车的窗口。\n\n限制：可检测占用或已预留前方轨道的火车，包括道岔和交叉口。。游戏可能隐藏已打开的窗口，请将其固定。"
+            "description": "当火车显示“等待通路空闲”时，速度标识下方会以可点击的名称列出阻挡它的火车：阻挡链（最多19个，之后为“…”）。循环（死锁）以 ∞ 标记。点击名称可打开该火车的窗口。\n\n可检测占用或已预留前方轨道的火车，包括道岔和交叉口。点击后阻挡链的窗口保持可见；如需一直保持打开，请固定窗口。"
         },
         "zh_TW": {
             "name": "誰擋了我的路？",
             "summary": "顯示是哪列火車擋住了等待中的火車。",
-            "description": "在顯示「等候可通行路徑中」的火車速度標示下方顯示擋住它的火車。按鈕列出阻擋鏈，循環（死結）以 ∞ 標記。點擊按鈕可開啟該火車的視窗。\n\n限制：可偵測佔用或已預留前方軌道的火車，包含道岔和交叉口。。遊戲可能隱藏已開啟的視窗，請將其釘選。"
+            "description": "當火車顯示「等候可通行路徑中」時，速度標示下方會以可點擊的名稱列出擋住它的火車：阻擋鏈（最多19個，之後為「…」）。循環（死結）以 ∞ 標記。點擊名稱可開啟該火車的視窗。\n\n可偵測佔用或已預留前方軌道的火車，包含道岔和交叉口。點擊後阻擋鏈的視窗保持可見；若要一直保持開啟，請釘選視窗。"
         }
     },
     "authors": [

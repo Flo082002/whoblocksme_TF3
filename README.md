@@ -15,11 +15,11 @@ When a train's vehicle window shows **"Waiting for Free Path"**, the mod adds a 
 
 ## How it works
 
-Transport Fever 3 does not expose which vehicle is blocking a waiting train. The mod therefore walks the train's planned path ahead of it and looks for track edges occupied or reserved by another train, including switches and crossings. It then repeats the search from the blocking train to build the chain.
+Transport Fever 3 does not expose which vehicle is blocking a waiting train. The mod reads every train's path and takes the track it occupies plus the track it has reserved (`reservedFrom`..`reservedTo`). For the waiting train it takes the path ahead up to the second real signal (waypoints are ignored), because a train only passes a signal if the block behind it is free too. Another train holding any edge in that range is the blocker. Switches and crossings are matched through their shared node. The search then repeats from the blocking train, as long as that train is waiting itself, to build the chain.
 
 ## Known limitations
 
-- The game may hide windows opened by clicking a train name. Pin the window to keep it open.
+- Clicking a name keeps the chain's windows visible for a moment, but the game may still hide unpinned windows later. Pin a window to keep it open.
 
 ## Development
 
@@ -40,4 +40,6 @@ MIT, see [LICENSE](LICENSE).
 
 Installation über mod.io bzw. den Mod Hub im Spiel, oder manuell den Ordner `whoblocksme_1` nach `~/.local/share/Transport Fever 3/mods/` (Linux) bzw. in den `mods`-Ordner der Userdata (Windows) kopieren und das Spiel neu starten.
 
-Grenzen: Geöffnete Fenster blendet das Spiel ggf. aus; zum Behalten anheften.
+Funktionsweise: Die Mod liest Belegung und Reservierung der Gleise jedes Zugs. Für den wartenden Zug gilt der Weg bis zum zweiten Signal voraus (Wegpunkte zählen nicht); wer dort ein Gleis belegt oder reserviert hat, ist der Blocker, auch an Weichen und Kreuzungen.
+
+Grenzen: Nach dem Klick bleiben die Fenster der Kette sichtbar, das Spiel kann nicht angeheftete Fenster aber später ausblenden; zum dauerhaften Behalten anheften.
