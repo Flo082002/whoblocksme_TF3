@@ -15,11 +15,10 @@ When a train's vehicle window shows **"Waiting for Free Path"**, the mod adds a 
 
 ## How it works
 
-Transport Fever 3 does not expose which vehicle is blocking a waiting train. The mod therefore walks the train's planned path ahead of it and looks for track edges occupied by another train. If nothing is found that way, it falls back to `transportVehicleSystem.getVehicles` on the edges ahead. It then repeats the search from the blocking train to build the chain.
+Transport Fever 3 does not expose which vehicle is blocking a waiting train. The mod therefore walks the train's planned path ahead of it and looks for track edges occupied or reserved by another train, including switches and crossings. It then repeats the search from the blocking train to build the chain.
 
 ## Known limitations
 
-- Blocks caused only by a path reservation, without the track actually being occupied, are not detected.
 - The game may hide windows opened by clicking a train name. Pin the window to keep it open.
 
 ## Development
@@ -41,4 +40,4 @@ MIT, see [LICENSE](LICENSE).
 
 Installation über mod.io bzw. den Mod Hub im Spiel, oder manuell den Ordner `whoblocksme_1` nach `~/.local/share/Transport Fever 3/mods/` (Linux) bzw. in den `mods`-Ordner der Userdata (Windows) kopieren und das Spiel neu starten.
 
-Grenzen: Reine Reservierungen ohne Gleisbelegung werden nicht erkannt. Geöffnete Fenster blendet das Spiel ggf. aus; zum Behalten anheften.
+Grenzen: Geöffnete Fenster blendet das Spiel ggf. aus; zum Behalten anheften.
